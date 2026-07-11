@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Méridien — Location d'appartements meublés à Singapour, Shanghai, New York, Finlande & Royaume-Uni</title>
+<meta name="description" content="Appartements meublés à louer à Singapour, Shanghai, New York, en Finlande et au Royaume-Uni. Prix sous la moyenne du marché, réservation en ligne, caution remboursable dès 1 mois.">
+<meta name="keywords" content="location appartement Singapour, location appartement Shanghai, location appartement New York, location appartement Finlande, location appartement Royaume-Uni, appartement meublé, location courte durée, location longue durée">
+<link rel="canonical" href="https://www.meridien-appartements.example/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Méridien — Appartements meublés dans le monde">
+<meta property="og:description" content="Singapour, Shanghai, New York, Finlande, Royaume-Uni : réservez un appartement meublé sous la moyenne du marché, caution remboursable.">
+<meta property="og:image" content="https://loremflickr.com/1200/630/apartment,city,skyline">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Méridien",
+  "description": "Agence de location d'appartements meublés à Singapour, Shanghai, New York, en Finlande et au Royaume-Uni.",
+  "areaServed": ["Singapour", "Shanghai", "New York", "Finlande", "Royaume-Uni"],
+  "priceRange": "$$",
+  "url": "https://www.meridien-appartements.example/"
+}
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2314213D'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%23D8C39B' font-family='serif'%3EM%3C/text%3E%3C/svg%3E">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --ink-2:#1c2c50;
+    --paper:#F7F5F0;
+    --paper-2:#EFEBE1;
+    --brass:#B08D57;
+    --brass-light:#D8C39B;
+    --teal:#3A6B65;
+    --clay:#A44A3F;
+    --charcoal:#232323;
+    --line: rgba(20,33,61,0.15);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--charcoal);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* HEADER */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--ink);
+    color:var(--paper);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px;max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    font-family:'Fraunces',serif;font-weight:700;font-size:22px;
+    letter-spacing:0.02em;display:flex;align-items:center;gap:8px;
+  }
+  .logo span{color:var(--brass-light);font-style:italic;font-weight:500;}
+  .nav-links{display:flex;gap:26px;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;}
+  .nav-links a{text-decoration:none;opacity:0.85;padding-bottom:3px;border-bottom:1px solid transparent;transition:.2s;}
+  .nav-links a:hover{opacity:1;border-color:var(--brass-light);}
+  .nav-cta{
+    background:var(--brass);color:var(--ink);padding:9px 18px;border-radius:2px;
+    font-size:13px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;
+    text-decoration:none;
+  }
+  .menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,0.3);color:var(--paper);width:38px;height:38px;border-radius:2px;cursor:pointer;font-size:16px;}
+  @media(max-width:820px){
+    .nav-links{display:none;}
+    .menu-btn{display:block;}
+    .nav-cta{display:none;}
+    .nav-links.mobile-open{
+      display:flex;flex-direction:column;gap:0;position:absolute;top:100%;left:0;right:0;
+      background:var(--ink);padding:8px 28px 18px;border-top:1px solid rgba(255,255,255,0.08);
+    }
+    .nav-links.mobile-open a{padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08);}
+  }
+
+  /* HERO */
+  .hero{
+    background:
+      radial-gradient(circle at 85% 10%, rgba(176,141,87,0.18), transparent 45%),
+      var(--ink);
+    color:var(--paper);
+    padding:72px 0 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .ticket-row{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:38px;
+  }
+  .coord-chip{
+    border:1px solid rgba(255,255,255,0.25);
+    padding:6px 12px;font-size:11.5px;color:var(--brass-light);
+    letter-spacing:.03em;border-radius:2px;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:50px;align-items:end;}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+  .hero h1{
+    font-size:clamp(34px,5vw,58px);line-height:1.05;font-weight:600;
+  }
+  .hero h1 em{font-style:italic;color:var(--brass-light);font-weight:500;}
+  .hero p.lede{
+    max-width:520px;color:rgba(247,245,240,0.75);font-size:16px;line-height:1.6;margin-top:18px;
+  }
+  .hero-stub{
+    border:1px dashed rgba(255,255,255,0.35);
+    padding:22px;border-radius:2px;
+    background:rgba(255,255,255,0.04);
+  }
+  .hero-stub .row{display:flex;justify-content:space-between;font-size:12.5px;color:rgba(247,245,240,0.6);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+  .hero-stub .val{color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:14px;}
+  .hero-stub hr{border:none;border-top:1px dashed rgba(255,255,255,0.25);margin:14px 0;}
+
+  /* SECTION HEADERS */
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--teal);margin-bottom:10px;display:block;
+  }
+  section{padding:64px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:34px;flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(26px,3.4vw,36px);font-weight:600;}
+
+  /* CITIES */
+  .cities{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+  }
+  @media(max-width:980px){.cities{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:620px){.cities{grid-template-columns:repeat(2,1fr);}}
+  .city-card{
+    background:var(--ink);color:var(--paper);border-radius:2px;
+    padding:18px 16px;cursor:pointer;border:1px solid transparent;
+    transition:.2s;position:relative;overflow:hidden;
+  }
+  .city-card:hover, .city-card.active{border-color:var(--brass-light);background:var(--ink-2);}
+  .city-card .flag{font-size:22px;}
+  .city-card h3{font-size:17px;margin-top:10px;font-weight:600;}
+  .city-card .coords{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--brass-light);margin-top:6px;}
+  .city-card .count{font-size:11.5px;color:rgba(247,245,240,0.55);margin-top:4px;}
+
+  /* LISTINGS */
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+  .filter-pill{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 14px;
+    border:1px solid var(--line);border-radius:20px;cursor:pointer;background:transparent;
+  }
+  .filter-pill.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .listings{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  @media(max-width:980px){.listings{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.listings{grid-template-columns:1fr;}}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .card img{width:100%;height:190px;object-fit:cover;display:block;background:var(--paper-2);}
+  .card-body{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .card-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:.04em;}
+  .card h3{font-size:18px;font-weight:600;}
+  .card .quartier{font-size:13px;color:#5b5b5b;}
+  .price-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--line);}
+  .price{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:var(--ink);}
+  .price small{font-size:11px;font-weight:400;color:#7a7a7a;}
+  .badge{
+    font-size:10.5px;background:rgba(58,107,101,0.12);color:var(--teal);
+    padding:3px 8px;border-radius:20px;font-family:'IBM Plex Mono',monospace;white-space:nowrap;
+  }
+  .btn-book{
+    margin-top:12px;background:var(--ink);color:var(--paper);border:none;
+    padding:10px 14px;font-size:13px;letter-spacing:.03em;text-transform:uppercase;
+    cursor:pointer;border-radius:2px;font-weight:600;transition:.2s;
+  }
+  .btn-book:hover{background:var(--brass);color:var(--ink);}
+
+  /* BOOKING */
+  #reserver{background:var(--paper-2);}
+  .booking-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+  @media(max-width:900px){.booking-wrap{grid-template-columns:1fr;}}
+  .form-box{background:#fff;border:1px solid var(--line);padding:28px;border-radius:2px;}
+  .form-box label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#666;margin-bottom:6px;margin-top:16px;}
+  .form-box label:first-child{margin-top:0;}
+  .form-box select, .form-box input{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:2px;
+    font-family:'IBM Plex Mono',monospace;font-size:14px;background:var(--paper);
+  }
+  .date-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .rules-note{margin-top:20px;font-size:12.5px;color:#666;line-height:1.6;background:rgba(164,74,63,0.06);border-left:3px solid var(--clay);padding:10px 14px;}
+
+  /* TICKET / SIGNATURE ELEMENT */
+  .ticket{
+    background:var(--ink);color:var(--paper);border-radius:4px;
+    position:relative;padding:0;overflow:hidden;
+    box-shadow:0 18px 40px rgba(20,33,61,0.25);
+  }
+  .ticket-top{padding:26px 26px 18px;}
+  .ticket-top .eyebrow{color:var(--brass-light);}
+  .ticket-top h3{font-size:24px;margin-bottom:4px;}
+  .ticket-top .sub{font-size:13px;color:rgba(247,245,240,0.6);}
+  .perforation{
+    position:relative;height:0;border-top:2px dashed rgba(255,255,255,0.25);margin:0 26px;
+  }
+  .perforation:before, .perforation:after{
+    content:"";position:absolute;top:-11px;width:22px;height:22px;background:var(--paper-2);border-radius:50%;
+  }
+  .perforation:before{left:-37px;}
+  .perforation:after{right:-37px;}
+  .ticket-bottom{padding:20px 26px 26px;}
+  .tk-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .tk-row .lbl{color:rgba(247,245,240,0.55);text-transform:uppercase;letter-spacing:.04em;font-size:11.5px;}
+  .tk-row .v{font-family:'IBM Plex Mono',monospace;color:var(--paper);}
+  .tk-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;}
+  .tk-total .v{font-family:'IBM Plex Mono',monospace;font-size:26px;color:var(--brass-light);font-weight:600;}
+  .tk-deposit{
+    margin-top:14px;background:rgba(164,74,63,0.18);border:1px solid rgba(164,74,63,0.4);
+    padding:12px 14px;border-radius:2px;font-size:12.5px;line-height:1.5;
+  }
+  .tk-deposit b{color:#e8a89e;}
+  .btn-confirm{
+    width:100%;margin-top:18px;background:var(--brass);color:var(--ink);border:none;
+    padding:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:13px;
+    cursor:pointer;border-radius:2px;
+  }
+  .empty-ticket{font-size:13px;color:rgba(247,245,240,0.55);padding:40px 26px;text-align:center;}
+
+  /* DEPOSIT INFO SECTION */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media(max-width:760px){.rules{grid-template-columns:1fr;}}
+  .rule-card{border:1px solid var(--line);background:#fff;padding:26px;border-radius:2px;}
+  .rule-card .num{font-family:'IBM Plex Mono',monospace;color:var(--brass);font-size:13px;}
+  .rule-card h3{font-size:20px;margin:10px 0 8px;}
+  .rule-card p{font-size:14px;color:#555;line-height:1.6;margin:0;}
+
+  /* BLOG */
+  .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  @media(max-width:980px){.blog-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.blog-grid{grid-template-columns:1fr;}}
+  .post-card{background:#fff;border:1px solid var(--line);border-radius:2px;display:flex;flex-direction:column;cursor:pointer;transition:.2s;}
+  .post-card:hover{border-color:var(--brass);}
+  .post-card img{width:100%;height:160px;object-fit:cover;background:var(--paper-2);}
+  .post-body{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .post-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--brass);text-transform:uppercase;}
+  .post-body h3{font-size:16px;font-weight:600;line-height:1.3;}
+  .post-excerpt{font-size:13px;color:#666;line-height:1.5;flex:1;}
+  .post-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#999;margin-top:6px;}
+
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(20,33,61,0.65);z-index:300;
+    align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{background:#fff;max-width:680px;width:100%;border-radius:4px;overflow:hidden;margin-bottom:40px;}
+  .modal-box img{width:100%;height:260px;object-fit:cover;}
+  .modal-content{padding:32px;}
+  .modal-content .post-tag{margin-bottom:10px;display:block;}
+  .modal-content h2{font-size:26px;margin-bottom:8px;}
+  .modal-content .post-meta{margin-bottom:20px;}
+  .modal-content p{font-size:14.5px;line-height:1.75;color:#333;margin:0 0 16px;}
+  .modal-close{
+    position:absolute;top:16px;right:16px;background:var(--ink);color:#fff;border:none;
+    width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;
+  }
+  .modal-box{position:relative;}
+
+  /* ADMIN AGENT */
+  .admin-toggle{
+    display:inline-block;margin-top:30px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+    color:var(--teal);cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;
+  }
+  .admin-panel{
+    display:none;margin-top:20px;background:var(--ink);color:var(--paper);padding:24px;border-radius:4px;
+  }
+  .admin-panel.open{display:block;}
+  .admin-panel .eyebrow{color:var(--brass-light);}
+  .admin-panel .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .admin-panel select, .admin-panel input{
+    flex:1;min-width:180px;padding:10px 12px;border:1px solid rgba(255,255,255,0.25);border-radius:2px;
+    background:rgba(255,255,255,0.06);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;
+  }
+  .admin-panel button.generate{
+    background:var(--brass);color:var(--ink);border:none;padding:10px 18px;border-radius:2px;
+    font-weight:700;text-transform:uppercase;font-size:12.5px;letter-spacing:.03em;cursor:pointer;
+  }
+  .admin-log{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(247,245,240,0.7);line-height:1.6;}
+  .admin-note{margin-top:16px;font-size:12px;color:rgba(247,245,240,0.5);line-height:1.6;border-top:1px solid rgba(255,255,255,0.12);padding-top:14px;}
+
+  .fab-chat{background:var(--teal);}
+  .chat-badge{
+    position:absolute;top:-2px;right:-2px;background:var(--clay);color:#fff;font-size:10px;
+    width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* ADMIN DASHBOARD */
+  .admin-link{
+    background:none;border:none;color:rgba(247,245,240,0.5);font-size:12px;cursor:pointer;
+    text-decoration:underline;font-family:'IBM Plex Mono',monospace;
+  }
+  .admin-overlay{
+    display:none;position:fixed;inset:0;background:rgba(20,33,61,0.75);z-index:400;
+    align-items:center;justify-content:center;padding:20px;
+  }
+  .admin-overlay.open{display:flex;}
+  .admin-login-box{background:#fff;padding:32px;border-radius:6px;max-width:340px;width:100%;text-align:center;}
+  .admin-login-box h3{font-size:18px;margin-bottom:14px;}
+  .admin-login-box input{width:100%;padding:11px;border:1px solid var(--line);border-radius:2px;margin-bottom:12px;font-family:'IBM Plex Mono',monospace;}
+  .admin-login-box button{width:100%;background:var(--ink);color:#fff;border:none;padding:11px;border-radius:2px;cursor:pointer;font-weight:600;}
+
+  .dash-box{background:#fff;border-radius:6px;max-width:920px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .dash-head{background:var(--ink);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;}
+  .dash-head h3{font-family:'Fraunces',serif;font-size:18px;}
+  .dash-head button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;}
+  .dash-tabs{display:flex;border-bottom:1px solid var(--line);}
+  .dash-tab{flex:1;padding:13px;text-align:center;background:var(--paper-2);border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:#666;}
+  .dash-tab.active{background:#fff;color:var(--ink);font-weight:600;border-bottom:2px solid var(--brass);}
+  .dash-body{flex:1;overflow-y:auto;padding:22px;}
+  .dash-panel{display:none;}
+  .dash-panel.active{display:block;}
+
+  .conv-list{display:flex;gap:16px;height:420px;}
+  .conv-side{width:220px;border-right:1px solid var(--line);overflow-y:auto;}
+  .conv-item{padding:10px 12px;border-radius:4px;cursor:pointer;font-size:13px;margin-bottom:4px;}
+  .conv-item:hover, .conv-item.active{background:var(--paper-2);}
+  .conv-item .cname{font-weight:600;}
+  .conv-item .cprev{font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .conv-main{flex:1;display:flex;flex-direction:column;}
+  .conv-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px;}
+  .conv-reply{display:flex;gap:8px;margin-top:10px;}
+  .conv-reply input{flex:1;padding:10px;border:1px solid var(--line);border-radius:20px;}
+  .conv-reply button{background:var(--ink);color:#fff;border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;}
+
+  .site-field{margin-bottom:16px;}
+  .site-field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#666;margin-bottom:5px;}
+  .site-field input, .site-field textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:2px;font-family:'Inter',sans-serif;font-size:13.5px;}
+  .site-save{background:var(--brass);color:var(--ink);border:none;padding:11px 20px;border-radius:2px;font-weight:700;text-transform:uppercase;font-size:12.5px;cursor:pointer;}
+  .site-sub{font-family:'Fraunces',serif;font-size:16px;margin:26px 0 12px;padding-top:16px;border-top:1px solid var(--line);}
+  .mini-card{border:1px solid var(--line);padding:14px;border-radius:4px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .mini-card .mi-info{font-size:13px;}
+  .mini-card .mi-info b{display:block;font-size:14px;}
+  .mini-del{background:none;border:1px solid var(--clay);color:var(--clay);border-radius:2px;padding:6px 10px;cursor:pointer;font-size:12px;}
+  .db-status{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 12px;border-radius:2px;margin-bottom:18px;}
+  .db-status.live{background:rgba(58,107,101,0.12);color:var(--teal);}
+  .db-status.local{background:rgba(164,74,63,0.1);color:var(--clay);}
+
+  footer{
+    background:var(--ink);color:rgba(247,245,240,0.6);padding:40px 0;font-size:13px;
+  }
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--paper);padding:14px 22px;border-radius:2px;
+    font-size:13.5px;border:1px solid var(--brass);opacity:0;pointer-events:none;transition:.3s;z-index:100;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* FLOATING WIDGETS */
+  .fab-stack{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:14px;align-items:flex-end;}
+  .fab{
+    width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:26px;
+    box-shadow:0 10px 26px rgba(20,33,61,0.3);color:#fff;transition:.2s;
+  }
+  .fab:hover{transform:translateY(-2px);}
+  .fab-wa{background:#25D366;}
+  .fab-ai{background:var(--ink);border:2px solid var(--brass-light);}
+
+  .chat-panel{
+    position:fixed;bottom:96px;right:22px;width:340px;max-width:calc(100vw - 32px);
+    max-height:70vh;background:#fff;border-radius:8px;overflow:hidden;
+    box-shadow:0 24px 60px rgba(20,33,61,0.35);display:none;flex-direction:column;z-index:200;
+    border:1px solid var(--line);
+  }
+  .chat-panel.open{display:flex;}
+  .chat-head{background:var(--ink);color:var(--paper);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+  .chat-head .title{font-family:'Fraunces',serif;font-weight:600;font-size:15px;}
+  .chat-head .sub{font-size:11px;color:var(--brass-light);font-family:'IBM Plex Mono',monospace;}
+  .chat-head button{background:none;border:none;color:var(--paper);font-size:18px;cursor:pointer;}
+  .chat-body{flex:1;overflow-y:auto;padding:14px;background:var(--paper);display:flex;flex-direction:column;gap:10px;min-height:200px;}
+  .msg{max-width:85%;padding:9px 12px;border-radius:10px;font-size:13.5px;line-height:1.45;}
+  .msg.bot{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:2px;}
+  .msg.user{background:var(--ink);color:var(--paper);align-self:flex-end;border-bottom-right-radius:2px;}
+  .msg.thinking{color:#999;font-style:italic;}
+  .chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff;}
+  .chat-input input{flex:1;border:1px solid var(--line);border-radius:20px;padding:9px 14px;font-family:'Inter',sans-serif;font-size:13.5px;}
+  .chat-input button{background:var(--brass);border:none;color:var(--ink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:15px;}
+  @media(max-width:480px){.chat-panel{right:12px;bottom:88px;} .fab-stack{right:12px;bottom:14px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav" style="position:relative;">
+    <div class="logo">MÉRIDIEN <span>appartements</span></div>
+    <nav class="nav-links" id="navLinks">
+      <a href="#villes">Villes</a>
+      <a href="#annonces">Annonces</a>
+      <a href="#blog">Blog</a>
+      <a href="#regles">Cautions</a>
+      <a href="#reserver">Réserver</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#annonces" class="nav-cta">Voir les annonces</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="ticket-row">
+      <span class="coord-chip">SIN · 1.29°N 103.85°E</span>
+      <span class="coord-chip">SHA · 31.23°N 121.47°E</span>
+      <span class="coord-chip">NYC · 40.71°N 74.00°O</span>
+      <span class="coord-chip">HEL · 60.17°N 24.94°E</span>
+      <span class="coord-chip">LON · 51.51°N 0.13°O</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>Un appartement meublé, <em>où que vous atterrissiez.</em></h1>
+        <p class="lede">Singapour, Shanghai, New York, Finlande, Royaume-Uni — des logements sélectionnés par ville et par quartier, à des prix en dessous de la moyenne du marché local. Choisissez vos dates, la caution s'ajuste automatiquement selon la durée du séjour.</p>
+      </div>
+      <div class="hero-stub">
+        <div class="row"><span>Séjour</span><span class="val">1 à 3 mois</span></div>
+        <div class="row"><span>Caution</span><span class="val">1 mois de loyer</span></div>
+        <hr>
+        <div class="row"><span>Séjour</span><span class="val">Long terme (3 mois +)</span></div>
+        <div class="row"><span>Caution</span><span class="val">2 mois de loyer</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="villes">
+  <div class="wrap">
+    <span class="eyebrow">01 — Destinations</span>
+    <div class="section-head"><h2>Cinq villes, un carnet d'adresses</h2></div>
+    <div class="cities" id="citiesGrid"></div>
+  </div>
+</section>
+
+<section id="annonces">
+  <div class="wrap">
+    <span class="eyebrow">02 — Annonces</span>
+    <div class="section-head">
+      <h2>Appartements disponibles</h2>
+      <p style="max-width:360px;font-size:13.5px;color:#666;">Photos classées par ville et par quartier. Tous les prix affichés sont sous la moyenne du marché local.</p>
+    </div>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="listings" id="listingsGrid"></div>
+  </div>
+</section>
+
+<section id="regles" style="background:var(--paper-2);">
+  <div class="wrap">
+    <span class="eyebrow">03 — Conditions</span>
+    <div class="section-head"><h2>Comment fonctionne la caution</h2></div>
+    <div class="rules">
+      <div class="rule-card">
+        <span class="num">SÉJOUR COURT — 1 à 3 mois</span>
+        <h3>Caution d'un mois, remboursable</h3>
+        <p>Pour tout séjour compris entre 1 et 3 mois, une caution équivalente à un mois de loyer est demandée à la réservation. Elle est intégralement remboursée à la fin du séjour, sous réserve de l'état des lieux.</p>
+      </div>
+      <div class="rule-card">
+        <span class="num">LONG TERME — plus de 3 mois</span>
+        <h3>Caution de deux mois</h3>
+        <p>Pour les séjours de longue durée (au-delà de 3 mois), la caution demandée correspond à deux mois de loyer. Elle reste remboursable en fin de contrat, dans les mêmes conditions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reserver">
+  <div class="wrap">
+    <span class="eyebrow">04 — Réservation</span>
+    <div class="section-head"><h2>Choisissez vos dates</h2></div>
+    <div class="booking-wrap">
+      <div class="form-box">
+        <label for="apt">Appartement</label>
+        <select id="apt"></select>
+
+        <div class="date-row">
+          <div>
+            <label for="dateStart">Date de début</label>
+            <input type="date" id="dateStart">
+          </div>
+          <div>
+            <label for="dateEnd">Date de fin</label>
+            <input type="date" id="dateEnd">
+          </div>
+        </div>
+
+        <div class="rules-note">
+          Séjour de 1 à 3 mois : caution = 1 mois de loyer, remboursable.<br>
+          Séjour de plus de 3 mois : caution = 2 mois de loyer, remboursable.
+        </div>
+      </div>
+
+      <div class="ticket" id="ticket">
+        <div class="empty-ticket">Sélectionnez un appartement et vos dates pour générer votre récapitulatif de réservation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog">
+  <div class="wrap">
+    <span class="eyebrow">05 — Blog</span>
+    <div class="section-head">
+      <h2>Actualités & guides par ville</h2>
+      <p style="max-width:360px;font-size:13.5px;color:#666;">Contenu rédigé et publié par l'agent IA de Méridien, dédié au référencement local dans chaque pays.</p>
+    </div>
+    <div class="blog-grid" id="blogGrid"></div>
+
+    <button class="admin-toggle" id="adminToggle">Espace administrateur — agent de publication ▾</button>
+    <div class="admin-panel" id="adminPanel">
+      <span class="eyebrow">Agent IA de contenu</span>
+      <h3 style="font-size:18px;margin-bottom:6px;">Générer et publier un article</h3>
+      <div class="row">
+        <select id="genCity">
+          <option value="Singapour">Singapour</option>
+          <option value="Shanghai">Shanghai</option>
+          <option value="New York">New York</option>
+          <option value="Finlande">Finlande</option>
+          <option value="Royaume-Uni">Royaume-Uni</option>
+        </select>
+        <input type="text" id="genTopic" placeholder="Angle de l'article (ex : meilleurs quartiers pour expatriés)">
+      </div>
+      <div class="row">
+        <button class="generate" id="genBtn">Générer l'article avec l'IA</button>
+      </div>
+      <div class="admin-log" id="adminLog"></div>
+      <div class="admin-note">
+        Ce bouton simule le rôle d'un agent de rédaction : l'IA rédige un article optimisé SEO (titre, méta-description, mots-clés, contenu) et le publie instantanément dans le blog de ce navigateur.<br><br>
+        <b>Important :</b> pour qu'un article soit réellement visible sur Google pour tout le monde, il doit être publié sur un vrai serveur avec un nom de domaine actif, puis exploré et indexé par Google (via Google Search Console). Ce prototype ne le fait pas automatiquement — voir les instructions de mise en production plus bas.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="postModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <img id="modalImg" src="" alt="">
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<section id="contact" style="background:var(--paper-2);">
+  <div class="wrap">
+    <span class="eyebrow">06 — Contact</span>
+    <div class="section-head"><h2>Une question avant de réserver ?</h2></div>
+    <div class="form-box" style="max-width:560px;">
+      <label for="cName">Nom</label>
+      <input type="text" id="cName" placeholder="Votre nom">
+      <label for="cEmail">Email</label>
+      <input type="email" id="cEmail" placeholder="vous@exemple.com">
+      <label for="cMsg">Message</label>
+      <input type="text" id="cMsg" placeholder="Votre question ou votre demande">
+      <button class="btn-confirm" id="contactBtn" style="margin-top:20px;">Envoyer le message</button>
+      <p style="font-size:12px;color:#777;margin-top:12px;">Ouvre votre messagerie avec le message pré-rempli, à l'adresse contact@meridien-appartements.example</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Méridien — Locations meublées à Singapour, Shanghai, New York, en Finlande et au Royaume-Uni.</div>
+    <div>contact@meridien-appartements.example · <button class="admin-link" id="openAdminLogin">Administration</button></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- WIDGETS FLOTTANTS -->
+<div class="fab-stack">
+  <div class="chat-panel" id="aiPanel">
+    <div class="chat-head">
+      <div>
+        <div class="title">Assistant Méridien</div>
+        <div class="sub">Contenu · SEO · Stratégie</div>
+      </div>
+      <button id="aiClose">✕</button>
+    </div>
+    <div class="chat-body" id="aiBody">
+      <div class="msg bot">Bonjour 👋 Je suis l'assistant IA de Méridien — expert en immobilier locatif, en création de contenu et en SEO international. Posez-moi une question sur un appartement, une ville, ou demandez-moi une idée de contenu ou de stratégie SEO.</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="aiInput" placeholder="Écrivez votre message...">
+      <button id="aiSend">➤</button>
+    </div>
+  </div>
+
+  <a class="fab fab-wa" id="waBtn" href="#" target="_blank" rel="noopener" title="Discuter sur WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.09c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.16-4.94-4.35-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.14.12.31.02.5-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.14-.28.28-.12.56.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.36-.23.6-.14.24.09 1.55.73 1.82.86.27.14.44.2.51.31.07.12.07.66-.17 1.34z"/></svg>
+  </a>
+  <button class="fab fab-chat" id="chatToggle" title="Messagerie directe" style="position:relative;">
+    💬<span class="chat-badge" id="chatBadge" style="display:none;">•</span>
+  </button>
+  <button class="fab fab-ai" id="aiToggle" title="Assistant IA">✦</button>
+</div>
+
+<!-- CHAT INTÉGRÉ AU SITE (visiteur ↔ administrateur) -->
+<div class="chat-panel" id="visitorChatPanel">
+  <div class="chat-head">
+    <div>
+      <div class="title">Discuter avec Méridien</div>
+      <div class="sub" id="chatStatusLabel">Mode local</div>
+    </div>
+    <button id="chatClose">✕</button>
+  </div>
+  <div class="chat-body" id="visitorChatBody"></div>
+  <div class="chat-input">
+    <input type="text" id="visitorChatInput" placeholder="Écrivez votre message...">
+    <button id="visitorChatSend">➤</button>
+  </div>
+</div>
+
+<!-- ADMINISTRATION -->
+<div class="admin-overlay" id="adminLoginOverlay">
+  <div class="admin-login-box">
+    <h3>Connexion administrateur</h3>
+    <input type="password" id="adminPassword" placeholder="Mot de passe">
+    <button id="adminLoginBtn">Se connecter</button>
+    <p style="font-size:11px;color:#999;margin-top:10px;">Mot de passe par défaut : <b>meridien2026</b> — à changer dans le code (variable ADMIN_PASSWORD).</p>
+  </div>
+</div>
+
+<div class="admin-overlay" id="adminDashOverlay">
+  <div class="dash-box">
+    <div class="dash-head">
+      <h3>Tableau de bord — Méridien</h3>
+      <button id="dashClose">✕</button>
+    </div>
+    <div class="dash-tabs">
+      <button class="dash-tab active" data-tab="messages">Messages</button>
+      <button class="dash-tab" data-tab="site">SITE</button>
+    </div>
+    <div class="dash-body">
+      <div class="db-status" id="dbStatus">Vérification de la connexion...</div>
+
+      <div class="dash-panel active" id="tabMessages">
+        <div class="conv-list">
+          <div class="conv-side" id="convSide"></div>
+          <div class="conv-main">
+            <div class="conv-msgs" id="convMsgs"></div>
+            <div class="conv-reply">
+              <input type="text" id="convReplyInput" placeholder="Répondre au visiteur...">
+              <button id="convReplyBtn">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-panel" id="tabSite">
+        <div class="site-field">
+          <label>Titre principal (hero)</label>
+          <input type="text" id="siteHeroTitle">
+        </div>
+        <div class="site-field">
+          <label>Sous-titre (hero)</label>
+          <textarea id="siteHeroSub" rows="2"></textarea>
+        </div>
+        <div class="site-field">
+          <label>Numéro WhatsApp (format international, chiffres uniquement)</label>
+          <input type="text" id="siteWhatsapp">
+        </div>
+        <button class="site-save" id="saveSiteInfo">Enregistrer</button>
+
+        <div class="site-sub">Annonces ajoutées manuellement</div>
+        <div id="customListingsList"></div>
+        <div class="site-field"><label>Ville</label><input type="text" id="newListCity" placeholder="Ex : Singapour"></div>
+        <div class="site-field"><label>Quartier</label><input type="text" id="newListQuartier" placeholder="Ex : Bugis"></div>
+        <div class="site-field"><label>Prix / nuit (nombre)</label><input type="text" id="newListPrice" placeholder="Ex : 100"></div>
+        <div class="site-field"><label>Devise (SGD, CNY, USD, EUR, GBP)</label><input type="text" id="newListCurrency" placeholder="Ex : SGD"></div>
+        <button class="site-save" id="addListingBtn">Ajouter l'annonce</button>
+
+        <div class="site-sub">Articles de blog ajoutés manuellement</div>
+        <div id="customPostsList"></div>
+        <div class="site-field"><label>Titre</label><input type="text" id="newPostTitle"></div>
+        <div class="site-field"><label>Ville</label><input type="text" id="newPostCity"></div>
+        <div class="site-field"><label>Contenu (un ou plusieurs paragraphes)</label><textarea id="newPostContent" rows="4"></textarea></div>
+        <button class="site-save" id="addPostBtn">Publier l'article</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {id:'sg1', city:'Singapour', country:'SG', flag:'🇸🇬', coords:'1.29°N 103.85°E', quartier:'Orchard Road', price:118, avg:150, currency:'SGD', img:'https://loremflickr.com/640/420/singapore,apartment,livingroom/all?lock=11'},
+  {id:'sg2', city:'Singapour', country:'SG', flag:'🇸🇬', coords:'1.29°N 103.85°E', quartier:'Tiong Bahru', price:96, avg:125, currency:'SGD', img:'https://loremflickr.com/640/420/singapore,condo,interior/all?lock=12'},
+  {id:'sg3', city:'Singapour', country:'SG', flag:'🇸🇬', coords:'1.29°N 103.85°E', quartier:'Marina Bay', price:158, avg:205, currency:'SGD', img:'https://loremflickr.com/640/420/singapore,marina,apartment/all?lock=112'},
+  {id:'sh1', city:'Shanghai', country:'CN', flag:'🇨🇳', coords:'31.23°N 121.47°E', quartier:'Concession Française', price:520, avg:640, currency:'CNY', img:'https://loremflickr.com/640/420/shanghai,apartment,interior/all?lock=13'},
+  {id:'sh2', city:'Shanghai', country:'CN', flag:'🇨🇳', coords:'31.23°N 121.47°E', quartier:"Jing'an", price:610, avg:730, currency:'CNY', img:'https://loremflickr.com/640/420/shanghai,loft,livingroom/all?lock=14'},
+  {id:'sh3', city:'Shanghai', country:'CN', flag:'🇨🇳', coords:'31.23°N 121.47°E', quartier:'Pudong', price:450, avg:580, currency:'CNY', img:'https://loremflickr.com/640/420/shanghai,pudong,apartment/all?lock=113'},
+  {id:'ny1', city:'New York', country:'US', flag:'🇺🇸', coords:'40.71°N 74.00°O', quartier:'Upper West Side', price:145, avg:185, currency:'USD', img:'https://loremflickr.com/640/420/newyork,apartment,interior/all?lock=15'},
+  {id:'ny2', city:'New York', country:'US', flag:'🇺🇸', coords:'40.71°N 74.00°O', quartier:'Williamsburg, Brooklyn', price:120, avg:150, currency:'USD', img:'https://loremflickr.com/640/420/brooklyn,loft,apartment/all?lock=16'},
+  {id:'ny3', city:'New York', country:'US', flag:'🇺🇸', coords:'40.71°N 74.00°O', quartier:'Chelsea, Manhattan', price:165, avg:210, currency:'USD', img:'https://loremflickr.com/640/420/manhattan,chelsea,apartment/all?lock=114'},
+  {id:'fi1', city:'Finlande', country:'FI', flag:'🇫🇮', coords:'60.17°N 24.94°E', quartier:'Kallio, Helsinki', price:78, avg:98, currency:'EUR', img:'https://loremflickr.com/640/420/helsinki,apartment,interior/all?lock=17'},
+  {id:'fi2', city:'Finlande', country:'FI', flag:'🇫🇮', coords:'60.17°N 24.94°E', quartier:'Töölö, Helsinki', price:92, avg:115, currency:'EUR', img:'https://loremflickr.com/640/420/finland,scandinavian,livingroom/all?lock=18'},
+  {id:'fi3', city:'Finlande', country:'FI', flag:'🇫🇮', coords:'60.45°N 22.27°E', quartier:'Turku, centre-ville', price:65, avg:82, currency:'EUR', img:'https://loremflickr.com/640/420/turku,finland,apartment/all?lock=115'},
+  {id:'uk1', city:'Royaume-Uni', country:'GB', flag:'🇬🇧', coords:'51.51°N 0.13°O', quartier:'Shoreditch, Londres', price:88, avg:112, currency:'GBP', img:'https://loremflickr.com/640/420/london,apartment,interior/all?lock=19'},
+  {id:'uk2', city:'Royaume-Uni', country:'GB', flag:'🇬🇧', coords:'55.95°N 3.19°O', quartier:'Old Town, Édimbourg', price:70, avg:90, currency:'GBP', img:'https://loremflickr.com/640/420/edinburgh,apartment,interior/all?lock=20'},
+  {id:'uk3', city:'Royaume-Uni', country:'GB', flag:'🇬🇧', coords:'51.51°N 0.13°O', quartier:'Kensington, Londres', price:135, avg:175, currency:'GBP', img:'https://loremflickr.com/640/420/kensington,london,apartment/all?lock=116'},
+];
+
+// --- MOBILE MENU ---
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+menuBtn.addEventListener('click', ()=> navLinks.classList.toggle('mobile-open'));
+navLinks.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> navLinks.classList.remove('mobile-open')));
+
+const CURR_SYM = {SGD:'S$', CNY:'¥', USD:'$', EUR:'€', GBP:'£'};
+const cities = [...new Set(DATA.map(d=>d.city))];
+
+// --- CITIES GRID ---
+const citiesGrid = document.getElementById('citiesGrid');
+function cityInfo(city){ const d = DATA.find(x=>x.city===city); return d; }
+cities.forEach(city=>{
+  const info = cityInfo(city);
+  const count = DATA.filter(d=>d.city===city).length;
+  const el = document.createElement('div');
+  el.className = 'city-card';
+  el.dataset.city = city;
+  el.innerHTML = `<div class="flag">${info.flag}</div><h3>${city}</h3><div class="coords">${info.coords}</div><div class="count">${count} annonces</div>`;
+  el.addEventListener('click', ()=>{ setFilter(city); document.getElementById('annonces').scrollIntoView({behavior:'smooth'}); });
+  citiesGrid.appendChild(el);
+});
+
+// --- FILTER BAR ---
+const filterBar = document.getElementById('filterBar');
+let currentFilter = 'Toutes';
+function buildFilterBar(){
+  filterBar.innerHTML = '';
+  ['Toutes', ...cities].forEach(city=>{
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill' + (city===currentFilter ? ' active' : '');
+    btn.textContent = city;
+    btn.addEventListener('click', ()=> setFilter(city));
+    filterBar.appendChild(btn);
+  });
+}
+function setFilter(city){
+  currentFilter = city;
+  buildFilterBar();
+  renderListings();
+  document.querySelectorAll('.city-card').forEach(c=> c.classList.toggle('active', c.dataset.city===city));
+}
+buildFilterBar();
+
+// --- LISTINGS ---
+const listingsGrid = document.getElementById('listingsGrid');
+function renderListings(){
+  listingsGrid.innerHTML = '';
+  const items = currentFilter==='Toutes' ? DATA : DATA.filter(d=>d.city===currentFilter);
+  items.forEach(d=>{
+    const pct = Math.round((1 - d.price/d.avg)*100);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${d.img}" alt="Appartement ${d.quartier}, ${d.city}" loading="lazy">
+      <div class="card-body">
+        <span class="card-tag">${d.flag} ${d.city}</span>
+        <h3>${d.quartier}</h3>
+        <div class="quartier">Appartement meublé · disponible immédiatement</div>
+        <div class="price-row">
+          <div class="price">${CURR_SYM[d.currency]}${d.price}<small> / nuit</small></div>
+          <span class="badge">-${pct}% vs marché</span>
+        </div>
+        <button class="btn-book" data-id="${d.id}">Réserver</button>
+      </div>`;
+    card.querySelector('.btn-book').addEventListener('click', ()=>{
+      document.getElementById('apt').value = d.id;
+      updateTicket();
+      document.getElementById('reserver').scrollIntoView({behavior:'smooth'});
+    });
+    listingsGrid.appendChild(card);
+  });
+}
+renderListings();
+
+// --- BOOKING FORM ---
+const aptSelect = document.getElementById('apt');
+DATA.forEach(d=>{
+  const opt = document.createElement('option');
+  opt.value = d.id;
+  opt.textContent = `${d.flag} ${d.city} — ${d.quartier} (${CURR_SYM[d.currency]}${d.price}/nuit)`;
+  aptSelect.appendChild(opt);
+});
+
+const dateStart = document.getElementById('dateStart');
+const dateEnd = document.getElementById('dateEnd');
+const ticket = document.getElementById('ticket');
+const toast = document.getElementById('toast');
+
+function fmtDate(str){
+  if(!str) return '—';
+  const d = new Date(str+'T00:00:00');
+  return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short', year:'numeric'});
+}
+
+function updateTicket(){
+  const apt = DATA.find(d=>d.id===aptSelect.value);
+  const start = dateStart.value, end = dateEnd.value;
+
+  if(!apt || !start || !end){
+    ticket.innerHTML = `<div class="empty-ticket">Sélectionnez un appartement et vos dates pour générer votre récapitulatif de réservation.</div>`;
+    return;
+  }
+  const d1 = new Date(start+'T00:00:00');
+  const d2 = new Date(end+'T00:00:00');
+  const nights = Math.round((d2-d1)/(1000*60*60*24));
+
+  if(nights <= 0){
+    ticket.innerHTML = `<div class="empty-ticket">La date de fin doit être après la date de début.</div>`;
+    return;
+  }
+  const todayCheck = new Date(); todayCheck.setHours(0,0,0,0);
+  if(d1 < todayCheck){
+    ticket.innerHTML = `<div class="empty-ticket">La date de début ne peut pas être dans le passé.</div>`;
+    return;
+  }
+
+  const months = nights/30;
+  const sym = CURR_SYM[apt.currency];
+  const total = nights * apt.price;
+  const monthlyRate = apt.price * 30;
+  let depositMonths, dureeLabel;
+
+  if(months < 1){
+    depositMonths = 1;
+    dureeLabel = "Court séjour (moins d'un mois)";
+  } else if(months <= 3){
+    depositMonths = 1;
+    dureeLabel = 'Séjour courte durée (1 à 3 mois)';
+  } else {
+    depositMonths = 2;
+    dureeLabel = 'Séjour longue durée (plus de 3 mois)';
+  }
+  const deposit = depositMonths * monthlyRate;
+
+  ticket.innerHTML = `
+    <div class="ticket-top">
+      <span class="eyebrow">Récapitulatif · non contractuel</span>
+      <h3>${apt.flag} ${apt.quartier}</h3>
+      <div class="sub">${apt.city} · ${apt.coords}</div>
+    </div>
+    <div class="perforation"></div>
+    <div class="ticket-bottom">
+      <div class="tk-row"><span class="lbl">Arrivée</span><span class="v">${fmtDate(start)}</span></div>
+      <div class="tk-row"><span class="lbl">Départ</span><span class="v">${fmtDate(end)}</span></div>
+      <div class="tk-row"><span class="lbl">Durée</span><span class="v">${nights} nuits · ${dureeLabel}</span></div>
+      <div class="tk-row"><span class="lbl">Tarif</span><span class="v">${sym}${apt.price} / nuit</span></div>
+      <div class="tk-total"><span>Total séjour</span><span class="v">${sym}${total.toLocaleString('fr-FR')}</span></div>
+      <div class="tk-deposit">
+        <b>Caution : ${sym}${deposit.toLocaleString('fr-FR')} (${depositMonths} mois de loyer)</b><br>
+        Intégralement remboursable à la fin du séjour, sous réserve de l'état des lieux.
+      </div>
+      <button class="btn-confirm" id="confirmBtn">Confirmer la demande</button>
+    </div>`;
+
+  document.getElementById('confirmBtn').addEventListener('click', ()=>{
+    const ref = 'MER-' + apt.id.toUpperCase() + '-' + Math.floor(1000 + Math.random()*9000);
+    const subject = encodeURIComponent(`Demande de réservation ${ref} — ${apt.quartier}, ${apt.city}`);
+    const body = encodeURIComponent(
+`Bonjour,
+
+Je souhaite réserver l'appartement suivant :
+
+Référence : ${ref}
+Ville : ${apt.city} (${apt.quartier})
+Arrivée : ${fmtDate(start)}
+Départ : ${fmtDate(end)}
+Durée : ${nights} nuits — ${dureeLabel}
+Total séjour : ${sym}${total.toLocaleString('fr-FR')}
+Caution (${depositMonths} mois) : ${sym}${deposit.toLocaleString('fr-FR')}
+
+Merci de me confirmer la disponibilité.`);
+    window.location.href = `mailto:contact@meridien-appartements.example?subject=${subject}&body=${body}`;
+    showToast(`Demande ${ref} prête — vérifiez votre messagerie pour l'envoyer.`);
+  });
+}
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=> toast.classList.remove('show'), 3600);
+}
+
+aptSelect.addEventListener('change', updateTicket);
+dateStart.addEventListener('change', updateTicket);
+dateEnd.addEventListener('change', updateTicket);
+
+// sensible default dates + min bounds
+const today = new Date();
+const todayStr = today.toISOString().slice(0,10);
+const in7 = new Date(today.getTime() + 7*86400000);
+const in67 = new Date(today.getTime() + 67*86400000);
+dateStart.min = todayStr;
+dateStart.value = in7.toISOString().slice(0,10);
+dateEnd.value = in67.toISOString().slice(0,10);
+dateEnd.min = dateStart.value;
+dateStart.addEventListener('change', ()=>{ dateEnd.min = dateStart.value; });
+
+// --- CONTACT FORM ---
+document.getElementById('contactBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const msg = document.getElementById('cMsg').value.trim();
+  if(!name || !email || !msg){
+    showToast('Merci de remplir votre nom, email et message.');
+    return;
+  }
+  const subject = encodeURIComponent(`Question de ${name} — site Méridien`);
+  const body = encodeURIComponent(`Nom : ${name}\nEmail : ${email}\n\nMessage :\n${msg}`);
+  window.location.href = `mailto:contact@meridien-appartements.example?subject=${subject}&body=${body}`;
+  showToast("Votre messagerie va s'ouvrir avec le message pré-rempli.");
+});
+
+updateTicket();
+
+// --- WHATSAPP (messagerie privée réelle avec l'administrateur) ---
+// ⚠️ Remplacez ce numéro par le vrai numéro WhatsApp de l'administrateur (format international, sans "+" ni espaces)
+const WHATSAPP_NUMBER = '330000000000';
+document.getElementById('waBtn').href =
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour, je suis intéressé(e) par un appartement sur Méridien.")}`;
+
+// --- ASSISTANT IA (contenu / SEO / stratégie) ---
+const aiToggle = document.getElementById('aiToggle');
+const aiPanel = document.getElementById('aiPanel');
+const aiClose = document.getElementById('aiClose');
+const aiBody = document.getElementById('aiBody');
+const aiInput = document.getElementById('aiInput');
+const aiSend = document.getElementById('aiSend');
+
+aiToggle.addEventListener('click', ()=> aiPanel.classList.toggle('open'));
+aiClose.addEventListener('click', ()=> aiPanel.classList.remove('open'));
+
+const AI_SYSTEM_PROMPT = `Tu es l'assistant IA du site Méridien, une agence de location d'appartements meublés à Singapour, Shanghai, New York, en Finlande et au Royaume-Uni.
+Tu joues trois rôles selon la question posée :
+1. Conseiller pour les visiteurs : aide à choisir une ville, un quartier, explique les règles de caution (1 mois pour un séjour de 1 à 3 mois, 2 mois au-delà, remboursable).
+2. Expert en création de contenu et SEO : quand on te le demande, propose des idées d'articles de blog, des titres optimisés, des méta-descriptions, une structure de mots-clés locaux par pays, des idées de backlinks et de contenu pour améliorer le référencement naturel du site dans ces 5 pays.
+3. Vision stratégique (rôle CEO) : quand on te le demande, donne des recommandations concrètes de croissance, de positionnement et de priorités.
+Réponds toujours en français, de façon concrète et actionnable, en 3 à 6 phrases maximum sauf si on te demande une liste détaillée. Ne promets jamais de résultats de trafic garantis (nombre de visiteurs, classement "numéro 1") : sois honnête sur le fait que le SEO prend du temps et dépend du contenu, des liens et de la régularité.`;
+
+let aiHistory = [];
+
+function addMsg(text, role){
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+  div.textContent = text;
+  aiBody.appendChild(div);
+  aiBody.scrollTop = aiBody.scrollHeight;
+  return div;
+}
+
+async function sendAiMessage(){
+  const text = aiInput.value.trim();
+  if(!text) return;
+  addMsg(text, 'user');
+  aiHistory.push({role:'user', content:text});
+  aiInput.value = '';
+  const thinking = addMsg('...', 'bot');
+  thinking.classList.add('thinking');
+
+  try{
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: AI_SYSTEM_PROMPT,
+        messages: aiHistory
+      })
+    });
+    const data = await response.json();
+    const reply = (data.content || []).map(b => b.text || '').join('\n').trim() || "Désolé, je n'ai pas pu générer de réponse. Réessayez.";
+    thinking.remove();
+    addMsg(reply, 'bot');
+    aiHistory.push({role:'assistant', content:reply});
+  }catch(err){
+    thinking.remove();
+    addMsg("Connexion à l'assistant indisponible pour le moment. Réessayez dans un instant, ou contactez l'administrateur via WhatsApp.", 'bot');
+  }
+}
+
+aiSend.addEventListener('click', sendAiMessage);
+aiInput.addEventListener('keydown', e=>{ if(e.key === 'Enter') sendAiMessage(); });
+
+// --- BLOG ---
+const SEED_POSTS = [
+  {slug:'orchard-marina-singapour', city:'Singapour', title:'Orchard Road ou Marina Bay : où louer à Singapour selon votre style de vie', excerpt:"Comparatif des deux quartiers les plus demandés par les expatriés à Singapour, pour choisir en fonction de votre budget et de votre rythme de vie.", content:"Singapour concentre deux profils de quartiers très différents pour un séjour meublé. Orchard Road séduit par sa proximité avec les commerces, les transports et la vie nocturne, avec des loyers qui restent élevés mais justifiés par l'emplacement central.\n\nMarina Bay attire plutôt une clientèle professionnelle, proche des sièges d'entreprises et du quartier d'affaires, avec des immeubles récents et des vues dégagées.\n\nPour un séjour courte durée (1 à 3 mois), Orchard Road offre plus de flexibilité grâce à la densité de logements meublés. Pour un séjour long terme, Marina Bay devient compétitif une fois la caution de deux mois amortie sur la durée.", date:'2026-07-01', img:'https://loremflickr.com/640/360/singapore,orchard,road/all?lock=201'},
+  {slug:'shanghai-jingan-guide', city:'Shanghai', title:"Vivre à Jing'an : le guide du quartier préféré des expatriés à Shanghai", excerpt:"Ce que vous devez savoir sur Jing'an avant de réserver un appartement meublé à Shanghai.", content:"Jing'an est souvent le premier choix des nouveaux arrivants à Shanghai grâce à son mélange d'immeubles modernes et de ruelles historiques préservées.\n\nLe quartier concentre de nombreuses écoles internationales, ce qui en fait une option naturelle pour les familles en mobilité longue durée. Les loyers y sont élevés par rapport à la moyenne shanghaïenne, mais restent inférieurs à ceux du quartier de la Concession Française pour une surface équivalente.\n\nPour les séjours de plus de trois mois, la caution de deux mois de loyer reste la norme du marché local — Méridien applique cette même règle, entièrement remboursable à la fin du bail.", date:'2026-07-04', img:'https://loremflickr.com/640/360/shanghai,jingan,street/all?lock=202'},
+  {slug:'caution-location-meublee-guide', city:'Général', title:"Caution, préavis, état des lieux : ce qu'il faut savoir avant de louer meublé à l'étranger", excerpt:"Un guide simple pour comprendre les règles de caution selon la durée de votre séjour, dans les 5 pays couverts par Méridien.", content:"La caution est souvent la première question posée par nos locataires. La règle est volontairement simple : un mois de loyer pour un séjour de 1 à 3 mois, deux mois de loyer au-delà. Dans les deux cas, la somme est intégralement remboursable à la fin du séjour, sous réserve de l'état des lieux de sortie.\n\nCette règle s'applique de la même façon à Singapour, Shanghai, New York, en Finlande et au Royaume-Uni, ce qui simplifie la comparaison entre destinations pour les voyageurs qui hésitent encore sur leur ville d'arrivée.\n\nNotre conseil : photographiez systématiquement l'appartement à votre arrivée et à votre départ, cela accélère le remboursement de la caution dans la quasi-totalité des cas.", date:'2026-07-08', img:'https://loremflickr.com/640/360/apartment,keys,contract/all?lock=203'}
+];
+
+function loadStoredPosts(){
+  try{ return JSON.parse(localStorage.getItem('meridien_blog_posts') || '[]'); }
+  catch(e){ return []; }
+}
+function saveStoredPosts(posts){
+  try{ localStorage.setItem('meridien_blog_posts', JSON.stringify(posts)); }catch(e){}
+}
+
+function allPosts(){
+  return [...loadStoredPosts(), ...SEED_POSTS].sort((a,b)=> new Date(b.date) - new Date(a.date));
+}
+
+const blogGrid = document.getElementById('blogGrid');
+function renderBlog(){
+  blogGrid.innerHTML = '';
+  allPosts().forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'post-card';
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.title}" loading="lazy">
+      <div class="post-body">
+        <span class="post-tag">${p.city}</span>
+        <h3>${p.title}</h3>
+        <div class="post-excerpt">${p.excerpt}</div>
+        <div class="post-meta">${new Date(p.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}</div>
+      </div>`;
+    card.addEventListener('click', ()=> openPost(p));
+    blogGrid.appendChild(card);
+  });
+}
+renderBlog();
+
+const postModal = document.getElementById('postModal');
+const modalImg = document.getElementById('modalImg');
+const modalContent = document.getElementById('modalContent');
+function openPost(p){
+  modalImg.src = p.img;
+  modalImg.alt = p.title;
+  const paragraphs = p.content.split('\n\n').map(par=>`<p>${par}</p>`).join('');
+  modalContent.innerHTML = `
+    <span class="post-tag">${p.city} · ${new Date(p.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}</span>
+    <h2>${p.title}</h2>
+    ${paragraphs}`;
+  postModal.classList.add('open');
+}
+document.getElementById('modalClose').addEventListener('click', ()=> postModal.classList.remove('open'));
+postModal.addEventListener('click', e=>{ if(e.target === postModal) postModal.classList.remove('open'); });
+
+// --- ADMIN : générateur d'article (agent de contenu) ---
+const adminToggle = document.getElementById('adminToggle');
+const adminPanel = document.getElementById('adminPanel');
+adminToggle.addEventListener('click', ()=> adminPanel.classList.toggle('open'));
+
+const genBtn = document.getElementById('genBtn');
+const adminLog = document.getElementById('adminLog');
+
+genBtn.addEventListener('click', async ()=>{
+  const city = document.getElementById('genCity').value;
+  const topic = document.getElementById('genTopic').value.trim() || `un guide pratique pour louer un appartement meublé à ${city}`;
+  genBtn.disabled = true;
+  adminLog.textContent = "⏳ Rédaction en cours par l'agent IA...";
+
+  const prompt = `Rédige un article de blog en français pour le site Méridien (location d'appartements meublés), sur le thème : "${topic}" pour la ville/zone : ${city}.
+Réponds UNIQUEMENT avec un objet JSON valide, sans texte autour, sans balises markdown, au format exact :
+{"title":"...", "excerpt":"...(1 phrase, 20 mots max)", "content":"...(3 paragraphes séparés par \\n\\n, 250 à 350 mots au total, ton informatif et concret, mentionne la règle de caution : 1 mois pour 1 à 3 mois de séjour, 2 mois au-delà, remboursable)"}`;
+
+  try{
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{role:'user', content: prompt}]
+      })
+    });
+    const data = await response.json();
+    let text = (data.content || []).map(b=>b.text||'').join('').trim();
+    text = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(text);
+
+    const newPost = {
+      slug: 'article-' + Date.now(),
+      city,
+      title: parsed.title,
+      excerpt: parsed.excerpt,
+      content: parsed.content,
+      date: new Date().toISOString().slice(0,10),
+      img: `https://loremflickr.com/640/360/${encodeURIComponent(city)},city/all?lock=${Date.now()%1000}`
+    };
+    const stored = loadStoredPosts();
+    stored.unshift(newPost);
+    saveStoredPosts(stored);
+    renderBlog();
+    adminLog.textContent = `✅ Article publié : "${parsed.title}" — visible dans le blog de ce navigateur.`;
+  }catch(err){
+    adminLog.textContent = "❌ Échec de génération. Réessayez, ou vérifiez la connexion à l'API.";
+  }finally{
+    genBtn.disabled = false;
+  }
+});
+
+/* =========================================================================
+   COUCHE BASE DE DONNÉES
+   -------------------------------------------------------------------------
+   ⚠️ Pour que le chat et les modifications du panneau SITE soient visibles
+   par TOUS les visiteurs (et pas seulement dans ton propre navigateur),
+   colle ta configuration Firebase gratuite ci-dessous.
+   Étapes (2 minutes, sans coder) : console.firebase.google.com → créer un
+   projet → Créer une base "Firestore" → icône Web "</>" → copier l'objet
+   de config affiché → le coller ici à la place de {}.
+   Sans configuration, le site fonctionne en mode local (démo, un seul
+   navigateur) pour que tu puisses tout tester immédiatement.
+   ========================================================================= */
+const FIREBASE_CONFIG = {
+  // apiKey: "...",
+  // authDomain: "...",
+  // projectId: "...",
+  // storageBucket: "...",
+  // messagingSenderId: "...",
+  // appId: "..."
+};
+
+let fsDb = null;
+const DB_LIVE = !!FIREBASE_CONFIG.apiKey;
+if (DB_LIVE) {
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    fsDb = firebase.firestore();
+  }catch(e){ console.error('Firebase non initialisé', e); }
+}
+
+function setDbStatusLabel(el){
+  if(!el) return;
+  el.textContent = DB_LIVE
+    ? '🟢 Connecté à Firebase — visible par tous les visiteurs, en temps réel.'
+    : '🟠 Mode local — visible uniquement dans ce navigateur. Configurez Firebase pour le rendre public.';
+  el.className = 'db-status ' + (DB_LIVE ? 'live' : 'local');
+}
+
+// --- API générique : messages de chat ---
+function visitorId(){
+  let id = localStorage.getItem('meridien_visitor_id');
+  if(!id){ id = 'v_' + Math.random().toString(36).slice(2,10); localStorage.setItem('meridien_visitor_id', id); }
+  return id;
+}
+
+async function sendChatMessage(convId, sender, text){
+  const msg = { sender, text, ts: Date.now() };
+  if(DB_LIVE){
+    await fsDb.collection('chats').doc(convId).collection('messages').add(msg);
+    await fsDb.collection('chats').doc(convId).set({ lastMessage:text, lastTs: msg.ts, convId }, {merge:true});
+  }else{
+    const key = 'meridien_chat_' + convId;
+    const list = JSON.parse(localStorage.getItem(key) || '[]');
+    list.push(msg);
+    localStorage.setItem(key, JSON.stringify(list));
+    const idx = JSON.parse(localStorage.getItem('meridien_chat_index') || '[]');
+    if(!idx.includes(convId)){ idx.push(convId); localStorage.setItem('meridien_chat_index', JSON.stringify(idx)); }
+  }
+}
+
+function listenChatMessages(convId, cb){
+  if(DB_LIVE){
+    return fsDb.collection('chats').doc(convId).collection('messages').orderBy('ts').onSnapshot(snap=>{
+      cb(snap.docs.map(d=>d.data()));
+    });
+  }else{
+    const key = 'meridien_chat_' + convId;
+    const poll = ()=> cb(JSON.parse(localStorage.getItem(key) || '[]'));
+    poll();
+    const interval = setInterval(poll, 1500);
+    return ()=> clearInterval(interval);
+  }
+}
+
+function listenAllConversations(cb){
+  if(DB_LIVE){
+    return fsDb.collection('chats').orderBy('lastTs','desc').onSnapshot(snap=>{
+      cb(snap.docs.map(d=>d.id));
+    });
+  }else{
+    const poll = ()=> cb(JSON.parse(localStorage.getItem('meridien_chat_index') || '[]'));
+    poll();
+    const interval = setInterval(poll, 2000);
+    return ()=> clearInterval(interval);
+  }
+}
+
+// --- API générique : contenu du site ---
+async function saveSiteContent(data){
+  if(DB_LIVE){
+    await fsDb.collection('site').doc('content').set(data, {merge:true});
+  }else{
+    const current = JSON.parse(localStorage.getItem('meridien_site_content') || '{}');
+    localStorage.setItem('meridien_site_content', JSON.stringify({...current, ...data}));
+  }
+}
+function listenSiteContent(cb){
+  if(DB_LIVE){
+    return fsDb.collection('site').doc('content').onSnapshot(doc=> cb(doc.exists ? doc.data() : {}));
+  }else{
+    const poll = ()=> cb(JSON.parse(localStorage.getItem('meridien_site_content') || '{}'));
+    poll();
+    const interval = setInterval(poll, 1500);
+    return ()=> clearInterval(interval);
+  }
+}
+
+/* ==================== CONTENU DYNAMIQUE DU SITE ==================== */
+listenSiteContent(content=>{
+  if(content.heroTitle){
+    document.querySelector('.hero h1').innerHTML = content.heroTitle;
+  }
+  if(content.heroSub){
+    document.querySelector('.hero p.lede').textContent = content.heroSub;
+  }
+  if(content.whatsappNumber){
+    document.getElementById('waBtn').href =
+      `https://wa.me/${content.whatsappNumber}?text=${encodeURIComponent("Bonjour, je suis intéressé(e) par un appartement sur Méridien.")}`;
+  }
+  // annonces ajoutées manuellement
+  const custom = content.customListings || [];
+  const merged = [...DATA, ...custom];
+  window.__ALL_LISTINGS__ = merged;
+  if(document.getElementById('listingsGrid')){
+    const savedFilter = currentFilter;
+    DATA.length = DATA.length; // no-op, listings render below uses ALL_LISTINGS via patch
+  }
+  renderListingsFromAll(merged);
+
+  // articles ajoutés manuellement depuis le tableau de bord
+  const dashPosts = content.customPosts || [];
+  window.__DASH_POSTS__ = dashPosts;
+  renderBlogWithDash();
+});
+
+function renderListingsFromAll(items){
+  const filtered = currentFilter==='Toutes' ? items : items.filter(d=>d.city===currentFilter);
+  listingsGrid.innerHTML = '';
+  filtered.forEach(d=>{
+    const pct = Math.round((1 - d.price/d.avg)*100) || 0;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${d.img}" alt="Appartement ${d.quartier}, ${d.city}" loading="lazy">
+      <div class="card-body">
+        <span class="card-tag">${d.flag||''} ${d.city}</span>
+        <h3>${d.quartier}</h3>
+        <div class="quartier">Appartement meublé · disponible immédiatement</div>
+        <div class="price-row">
+          <div class="price">${CURR_SYM[d.currency]||''}${d.price}<small> / nuit</small></div>
+          ${d.avg ? `<span class="badge">-${pct}% vs marché</span>` : ''}
+        </div>
+        <button class="btn-book" data-id="${d.id}">Réserver</button>
+      </div>`;
+    card.querySelector('.btn-book').addEventListener('click', ()=>{
+      if(![...aptSelect.options].some(o=>o.value===d.id)){
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = `${d.city} — ${d.quartier} (${CURR_SYM[d.currency]||''}${d.price}/nuit)`;
+        aptSelect.appendChild(opt);
+        DATA.push(d);
+      }
+      aptSelect.value = d.id;
+      updateTicket();
+      document.getElementById('reserver').scrollIntoView({behavior:'smooth'});
+    });
+    listingsGrid.appendChild(card);
+  });
+}
+
+function renderBlogWithDash(){
+  const dashPosts = (window.__DASH_POSTS__ || []).map(p=>({...p, img: p.img || 'https://loremflickr.com/640/360/apartment,city/all'}));
+  const combined = [...dashPosts, ...loadStoredPosts(), ...SEED_POSTS].sort((a,b)=> new Date(b.date)-new Date(a.date));
+  blogGrid.innerHTML = '';
+  combined.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'post-card';
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.title}" loading="lazy">
+      <div class="post-body">
+        <span class="post-tag">${p.city}</span>
+        <h3>${p.title}</h3>
+        <div class="post-excerpt">${p.excerpt||''}</div>
+        <div class="post-meta">${new Date(p.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}</div>
+      </div>`;
+    card.addEventListener('click', ()=> openPost(p));
+    blogGrid.appendChild(card);
+  });
+}
+
+/* ==================== CHAT VISITEUR (widget flottant) ==================== */
+const chatToggle = document.getElementById('chatToggle');
+const visitorChatPanel = document.getElementById('visitorChatPanel');
+const visitorChatBody = document.getElementById('visitorChatBody');
+const visitorChatInput = document.getElementById('visitorChatInput');
+const visitorChatSend = document.getElementById('visitorChatSend');
+const myConvId = visitorId();
+let unsubVisitorChat = null;
+
+chatToggle.addEventListener('click', ()=>{
+  visitorChatPanel.classList.toggle('open');
+  aiPanel.classList.remove('open');
+  document.getElementById('chatStatusLabel').textContent = DB_LIVE ? 'En ligne — Firebase' : 'Mode local (démo)';
+  if(visitorChatPanel.classList.contains('open') && !unsubVisitorChat){
+    unsubVisitorChat = listenChatMessages(myConvId, msgs=>{
+      visitorChatBody.innerHTML = '';
+      if(msgs.length===0){
+        visitorChatBody.innerHTML = `<div class="msg bot">Bonjour 👋 Écrivez votre message, l'administrateur vous répondra directement ici.</div>`;
+      }
+      msgs.forEach(m=>{
+        const div = document.createElement('div');
+        div.className = 'msg ' + (m.sender==='visitor' ? 'user' : 'bot');
+        div.textContent = m.text;
+        visitorChatBody.appendChild(div);
+      });
+      visitorChatBody.scrollTop = visitorChatBody.scrollHeight;
+    });
+  }
+});
+document.getElementById('chatClose').addEventListener('click', ()=> visitorChatPanel.classList.remove('open'));
+
+async function sendVisitorMsg(){
+  const text = visitorChatInput.value.trim();
+  if(!text) return;
+  visitorChatInput.value = '';
+  await sendChatMessage(myConvId, 'visitor', text);
+}
+visitorChatSend.addEventListener('click', sendVisitorMsg);
+visitorChatInput.addEventListener('keydown', e=>{ if(e.key==='Enter') sendVisitorMsg(); });
+
+/* ==================== ADMINISTRATION ==================== */
+const ADMIN_PASSWORD = 'meridien2026'; // ⚠️ à changer directement ici
+const openAdminLogin = document.getElementById('openAdminLogin');
+const adminLoginOverlay = document.getElementById('adminLoginOverlay');
+const adminDashOverlay = document.getElementById('adminDashOverlay');
+
+openAdminLogin.addEventListener('click', ()=> adminLoginOverlay.classList.add('open'));
+adminLoginOverlay.addEventListener('click', e=>{ if(e.target===adminLoginOverlay) adminLoginOverlay.classList.remove('open'); });
+
+document.getElementById('adminLoginBtn').addEventListener('click', ()=>{
+  const pass = document.getElementById('adminPassword').value;
+  if(pass === ADMIN_PASSWORD){
+    adminLoginOverlay.classList.remove('open');
+    adminDashOverlay.classList.add('open');
+    setDbStatusLabel(document.getElementById('dbStatus'));
+    initAdminMessages();
+    initAdminSiteTab();
+  }else{
+    showToast('Mot de passe incorrect.');
+  }
+});
+document.getElementById('dashClose').addEventListener('click', ()=> adminDashOverlay.classList.remove('open'));
+
+document.querySelectorAll('.dash-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
+  });
+});
+
+let activeConvId = null;
+let unsubConvMsgs = null;
+function initAdminMessages(){
+  const convSide = document.getElementById('convSide');
+  listenAllConversations(ids=>{
+    convSide.innerHTML = '';
+    if(ids.length===0){ convSide.innerHTML = '<div style="font-size:12px;color:#999;padding:10px;">Aucun message pour le moment.</div>'; }
+    ids.forEach(id=>{
+      const item = document.createElement('div');
+      item.className = 'conv-item' + (id===activeConvId ? ' active' : '');
+      if(id === 'system-alerts'){
+        item.innerHTML = `<div class="cname">🔔 Rapports du site</div><div class="cprev">Contrôles automatiques quotidiens</div>`;
+      }else{
+        item.innerHTML = `<div class="cname">Visiteur ${id.slice(2,8)}</div><div class="cprev">Cliquer pour ouvrir</div>`;
+      }
+      item.addEventListener('click', ()=> openConversation(id));
+      convSide.appendChild(item);
+    });
+  });
+}
+
+function openConversation(id){
+  activeConvId = id;
+  document.querySelectorAll('.conv-item').forEach(i=>i.classList.remove('active'));
+  if(unsubConvMsgs) unsubConvMsgs();
+  const convMsgs = document.getElementById('convMsgs');
+  unsubConvMsgs = listenChatMessages(id, msgs=>{
+    convMsgs.innerHTML = '';
+    msgs.forEach(m=>{
+      const div = document.createElement('div');
+      div.className = 'msg ' + (m.sender==='admin' ? 'user' : 'bot');
+      div.textContent = m.text;
+      convMsgs.appendChild(div);
+    });
+    convMsgs.scrollTop = convMsgs.scrollHeight;
+  });
+}
+
+document.getElementById('convReplyBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('convReplyInput');
+  const text = input.value.trim();
+  if(!text || !activeConvId) return;
+  input.value = '';
+  await sendChatMessage(activeConvId, 'admin', text);
+});
+document.getElementById('convReplyInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter') document.getElementById('convReplyBtn').click();
+});
+
+let currentSiteContent = {};
+function initAdminSiteTab(){
+  listenSiteContent(content=>{
+    currentSiteContent = content;
+    document.getElementById('siteHeroTitle').value = content.heroTitle || document.querySelector('.hero h1').textContent;
+    document.getElementById('siteHeroSub').value = content.heroSub || document.querySelector('.hero p.lede').textContent;
+    document.getElementById('siteWhatsapp').value = content.whatsappNumber || WHATSAPP_NUMBER;
+
+    const listingsList = document.getElementById('customListingsList');
+    listingsList.innerHTML = '';
+    (content.customListings||[]).forEach((l,i)=>{
+      const div = document.createElement('div');
+      div.className = 'mini-card';
+      div.innerHTML = `<div class="mi-info"><b>${l.quartier}, ${l.city}</b>${l.price} ${l.currency}/nuit</div><button class="mini-del">Supprimer</button>`;
+      div.querySelector('.mini-del').addEventListener('click', async ()=>{
+        const updated = (content.customListings||[]).filter((_,idx)=>idx!==i);
+        await saveSiteContent({customListings: updated});
+      });
+      listingsList.appendChild(div);
+    });
+
+    const postsList = document.getElementById('customPostsList');
+    postsList.innerHTML = '';
+    (content.customPosts||[]).forEach((p,i)=>{
+      const div = document.createElement('div');
+      div.className = 'mini-card';
+      div.innerHTML = `<div class="mi-info"><b>${p.title}</b>${p.city}</div><button class="mini-del">Supprimer</button>`;
+      div.querySelector('.mini-del').addEventListener('click', async ()=>{
+        const updated = (content.customPosts||[]).filter((_,idx)=>idx!==i);
+        await saveSiteContent({customPosts: updated});
+      });
+      postsList.appendChild(div);
+    });
+  });
+}
+
+document.getElementById('saveSiteInfo').addEventListener('click', async ()=>{
+  await saveSiteContent({
+    heroTitle: document.getElementById('siteHeroTitle').value,
+    heroSub: document.getElementById('siteHeroSub').value,
+    whatsappNumber: document.getElementById('siteWhatsapp').value.replace(/\D/g,'')
+  });
+  showToast('Modifications enregistrées.');
+});
+
+document.getElementById('addListingBtn').addEventListener('click', async ()=>{
+  const city = document.getElementById('newListCity').value.trim();
+  const quartier = document.getElementById('newListQuartier').value.trim();
+  const price = parseFloat(document.getElementById('newListPrice').value);
+  const currency = document.getElementById('newListCurrency').value.trim().toUpperCase() || 'EUR';
+  if(!city || !quartier || !price){ showToast('Merci de remplir ville, quartier et prix.'); return; }
+  const newListing = { id:'custom-'+Date.now(), city, quartier, price, currency, img:`https://loremflickr.com/640/420/${encodeURIComponent(city)},apartment/all?lock=${Date.now()%1000}` };
+  const updated = [...(currentSiteContent.customListings||[]), newListing];
+  await saveSiteContent({customListings: updated});
+  document.getElementById('newListCity').value='';
+  document.getElementById('newListQuartier').value='';
+  document.getElementById('newListPrice').value='';
+  document.getElementById('newListCurrency').value='';
+  showToast('Annonce ajoutée.');
+});
+
+document.getElementById('addPostBtn').addEventListener('click', async ()=>{
+  const title = document.getElementById('newPostTitle').value.trim();
+  const city = document.getElementById('newPostCity').value.trim() || 'Général';
+  const contentTxt = document.getElementById('newPostContent').value.trim();
+  if(!title || !contentTxt){ showToast('Merci de remplir le titre et le contenu.'); return; }
+  const newPost = { title, city, content: contentTxt, excerpt: contentTxt.slice(0,110)+'…', date: new Date().toISOString().slice(0,10), img:`https://loremflickr.com/640/360/${encodeURIComponent(city)},city/all?lock=${Date.now()%1000}` };
+  const updated = [...(currentSiteContent.customPosts||[]), newPost];
+  await saveSiteContent({customPosts: updated});
+  document.getElementById('newPostTitle').value='';
+  document.getElementById('newPostCity').value='';
+  document.getElementById('newPostContent').value='';
+  showToast('Article publié sur le blog.');
+});
+</script>
+
+</body>
+</html>
