@@ -1,0 +1,40 @@
+name: Publication quotidienne du blog Easy Booking
+
+# Se dÃ©clenche automatiquement tous les jours Ã  6h00 (heure de Paris, UTC+2 en Ã©tÃ©)
+# + permet aussi un dÃ©clenchement manuel depuis l'onglet "Actions" de GitHub
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 04:00 UTC = 06:00 Paris en Ã©tÃ©
+  workflow_dispatch: {}
+
+jobs:
+  publish-article:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: RÃ©cupÃ©rer le dÃ©pÃ´t
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: GÃ©nÃ©rer et publier l'article du jour
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+        run: node scripts/generate-article.js
+
+      - name: Publier les changements sur le dÃ©pÃ´t
+        run: |
+          git config user.name "Agent Easy Booking"
+          git config user.email "agent@meridien-appartements.example"
+          git add posts/ sitemap.xml
+          git diff --quiet && git diff --staged --quiet || git commit -m "Article automatique du $(date +'%Y-%m-%d')"
+          git push
+
+      - name: Notifier Google du nouveau sitemap
+        run: |
+          curl -s "https://www.google.com/ping?sitemap=https://www.meridien-appartements.example/sitemap.xml" || true
